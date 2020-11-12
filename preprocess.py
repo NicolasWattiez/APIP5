@@ -1,4 +1,88 @@
+import numpy as np
+import pandas as pd
+
+import re
+from bs4 import BeautifulSoup
+from nltk.tokenize import ToktokTokenizer
+from nltk.stem.wordnet import WordNetLemmatizer
+from nltk.corpus import stopwords
+from nltk.tag.util import untag
+from string import punctuation
+
+n_most_frequent_tag = pd.read_csv('n_most_frequent_tag.csv')
+
+
+def clean_text(text):
+    text = remove_html(text)
+    text = remove_elision(text)
+    text = lemitizeWords(text)
+    text = clean_punct(text)
+    text = stopWordsRemove(text)
+    return text
 
 def remove_html(text):
     text = BeautifulSoup(text, 'html.parser').get_text()
     return text
+
+def remove_elision(text):
+    text = text.lower()
+    text = re.sub(r"what's", "what is ", text)
+    text = re.sub(r"\'s", " ", text)
+    text = re.sub(r"\'ve", " have ", text)
+    text = re.sub(r"can't", "can not ", text)
+    text = re.sub(r"n't", " not ", text)
+    text = re.sub(r"i'm", "i am ", text)
+    text = re.sub(r"\'re", " are ", text)
+    text = re.sub(r"\'d", " would ", text)
+    text = re.sub(r"\'ll", " will ", text)
+    text = re.sub(r"\'scuse", " excuse ", text)
+    text = re.sub(r"\'\n", " ", text)
+    text = re.sub(r"\'\xa0", " ", text)
+    text = re.sub('\s+', ' ', text)
+    text = text.strip(' ')
+    return text
+
+lemma=WordNetLemmatizer()
+
+def lemitizeWords(text):
+    words=token.tokenize(text)
+    listLemma=[]
+    for w in words:
+        x=lemma.lemmatize(w, pos="v")
+        listLemma.append(x)
+    return ' '.join(map(str, listLemma))
+
+
+token=ToktokTokenizer()
+
+charac = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~0123456789'
+
+def strip_list_noempty(mylist):
+    newlist = (item.strip() if hasattr(item, 'strip') else item for item in mylist)
+    return [item for item in newlist if item != '']
+
+def clean_punct(text): 
+    words=token.tokenize(text)
+    punctuation_filtered = []
+    regex = re.compile('[%s]' % re.escape(charac)) # Échappe toutes les punctuations
+    remove_punctuation = str.maketrans(' ', ' ', charac)
+    for w in words:
+        if w in n_most_frequent_tag:
+            punctuation_filtered.append(w)
+        else:
+            punctuation_filtered.append(regex.sub('', w))
+  
+    filtered_list = strip_list_noempty(punctuation_filtered)
+        
+    return ' '.join(map(str, filtered_list))
+
+
+def stopWordsRemove(text):
+    
+    stop_words = set(stopwords.words("english"))
+    
+    words=token.tokenize(text)
+    
+    filtered = [w for w in words if not w in stop_words]
+    
+    return ' '.join(map(str, filtered))
