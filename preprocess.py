@@ -6,8 +6,6 @@ from bs4 import BeautifulSoup
 from nltk.tokenize import ToktokTokenizer
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import stopwords
-from nltk.tag.util import untag
-from string import punctuation
 
 n_most_frequent_tag = pd.read_csv('data/n_most_frequent_tag.csv', sep=',', header = None, index_col = 0, squeeze = True)
 
