@@ -9,8 +9,14 @@ from nltk.corpus import stopwords
 from nltk.tag.util import untag
 from string import punctuation
 
-n_most_frequent_tag = pd.read_csv('n_most_frequent_tag.csv')
+n_most_frequent_tag = pd.read_csv('data/n_most_frequent_tag.csv', sep=',', header = None, index_col = 0, squeeze = True)
 
+def clean_title_question(text1, text2):
+    text1 = clean_text(text1) 
+    text2 = clean_text(text2)
+    text = text1 + ' ' + text2
+    text = pd.Series([text])
+    return text
 
 def clean_text(text):
     text = remove_html(text)
