@@ -4,11 +4,14 @@ import pandas as pd
 import re
 from bs4 import BeautifulSoup
 import nltk
+nltk.download('wordnet')
+nltk.download('stopwords')
+
 from nltk.tokenize import ToktokTokenizer
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import stopwords
 
-nltk.download('wordnet')
+
 
 n_most_frequent_tag = pd.read_csv('data/n_most_frequent_tag.csv', sep=',', header = None, index_col = 0, squeeze = True)
 
