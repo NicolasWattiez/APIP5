@@ -21,7 +21,7 @@ def form_post(request: Request):
 
 
 @app.post('/')
-def form_post(request: Request, Titre: str=Form(...), Question: str=Form(...)):
+async def form_post(request: Request, Titre: str=Form(...), Question: str=Form(...)):
 
     clean_text = clean_title_question(Titre, Question)
     tag_preprocess = joblib.load('data/tag_preprocess.sav')
