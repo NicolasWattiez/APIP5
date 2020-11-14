@@ -10,6 +10,7 @@ nltk.download('stopwords')
 from nltk.tokenize import ToktokTokenizer
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import stopwords
+from nltk.tag.util import untag
 
 
 
@@ -28,6 +29,7 @@ def clean_text(text):
     text = lemitizeWords(text)
     text = clean_punct(text)
     text = stopWordsRemove(text)
+    RemoveWords_by_tag(text)
     return text
 
 def remove_html(text):
@@ -80,7 +82,7 @@ def clean_punct(text):
         if w in n_most_frequent_tag:
             punctuation_filtered.append(w)
         else:
-            punctuation_filtered.append(regex.sub(' ', w))
+            punctuation_filtered.append(regex.sub('', w))
   
     filtered_list = strip_list_noempty(punctuation_filtered)
         
@@ -94,5 +96,15 @@ def stopWordsRemove(text):
     words=token.tokenize(text)
     
     filtered = [w for w in words if not w in stop_words]
+    
+    return ' '.join(map(str, filtered))
+
+
+def RemoveWords_by_tag(text):
+    remove_tag_list = ['JJ','JJR', 'JJS', 'RBR', 'RBS']
+    token=ToktokTokenizer()
+    words=token.tokenize(text)
+    words_tagged = nltk.pos_tag(words)
+    filtered = untag([w for w in words_tagged if not w[1] in remove_tag_list]) # Filtre les mots qui n'appartiennt pas à la catégorie à supprimer
     
     return ' '.join(map(str, filtered))
