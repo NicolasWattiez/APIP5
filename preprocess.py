@@ -80,7 +80,7 @@ def clean_punct(text):
         if w in n_most_frequent_tag:
             punctuation_filtered.append(w)
         else:
-            punctuation_filtered.append(regex.sub('', w))
+            punctuation_filtered.append(regex.sub(' ', w))
   
     filtered_list = strip_list_noempty(punctuation_filtered)
         
